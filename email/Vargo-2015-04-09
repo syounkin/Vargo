@@ -1,0 +1,58 @@
+Do you know how to do this/have any interest in helping me with this?
+
+
+---------- Forwarded message ----------
+From: Jason Vargo <javargo@wisc.edu>
+Date: Thu, Apr 9, 2015 at 2:11 PM
+Subject: trying to scrape MG&E residential data
+To: Paul Wilson <wilsonp@engr.wisc.edu>
+Cc: Jason Schatz <jschatz2@wisc.edu>, Lauren Michael <lmichael@wisc.edu>
+
+
+Hello Paul,
+
+Through my work on campus around Livable Cities, I've heard a lot of people
+thinking about how to use hi-res energy data in their work. Some mention
+how difficult it is to get MG&E to share data, and I've heard others remark
+how simple it is. Often people are talking about different data, but MG&E
+does have a web interface to a database of residential gas and electric
+usage by address. Here is the website with a sample query with terms house
+number, street direction, street name, street status(?), auxiliary unit,
+and city.
+
+http://www.mge.com/customer-service/home/average-use-cost/results.htm?hn=314&sd=N&sn=Blount&ss=St&au=&c=Madison
+
+I'm contacting you to ask about finding someone to help scrape this data
+and link it to parcel-level tax info on homes. If we were able to get
+parcel data fro the Robbins map library...
+
+Is this the type of thing ACI could assist on? How long do you think it
+would take? Do you know other contacts on campus who might be able to help
+(student hackers)?
+
+We were thinking about using this data with dense temperature data we have
+for the City of Madison since 2012 to look at local heat islands,
+vegetation and energy use, but there are plenty of people on campus who
+would run with this if it existed. BTW, do you know if this already exists?
+Maybe someone has done the difficult work of prying it from MG&E already.
+
+Hope you are well and thanks for your attention on this.
+
+Jason
+
+*-------- ------- ------ ----- ---- --- -- - -- --- ---- ----- ------
+------- --------*
+ *Jason Vargo, PhD*
+Global Health Institute <globalhealth@hslc.wisc.edu>
+1027 Medical Sciences Center
+1300 University Avenue
+Madison, WI 53706
+(608) 263-6209
+
+Nelson Institute Center for Sustainability and the Global Environment
+<http://www.sage.wisc.edu/people/vargo/vargo.html>
+University of Wisconsin-Madison
+1710 University Ave, Room 287
+Madison, WI 53726 USA
+*javargo@wisc.edu <javargo@wisc.edu> *
+
