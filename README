@@ -1,1 +1,51 @@
-Hello World!
+Samuel G. Younkin
+Sat 11 Apr 2015 04:54:49 PM CDT
+
+~~~~~~~~~~~~~~~
+
+Welcome to the Vargo repository! I hope you will be loving it!
+
+This repository contains perl script(s) that retrieve data from MGE by
+querying the following MGE website.
+
+http://www.mge.com/customer-service/home/average-use-cost/
+
+~~~~~~~~~~~~~~~
+
+The repository contains the following directory structure:
+
+.
+├── data
+│   └── README
+├── email
+│   └── Vargo-2015-04-09
+├── perl
+│   └── getData.pl
+└── README
+
+In getData.pl variables are defined for the house 514 S. Baldwin St.
+In the future we will include a front end to the script that reads in
+addresses from some sort of database.
+
+~~~~~~~~~~~~~~~
+
+Usage:
+
+sgy@jhsph-box:~$ cd Vargo
+sgy@jhsph-box:~/Vargo$ perl ./perl/getData.pl 
+High: 750
+Low: 311
+Average: 497
+
+~~~~~~~~~~~~~~~
+
+Future plans:
+  Switch to python or R
+  Increase efficiency by avoiding the reading/writing of
+  ./data/results.html
+  Link to a database of addresses
+  Test behavior if errors are encountered due to:
+    bad addresses
+    inconsistent parsing
+
+~~~~~~~~~~~~~~~
