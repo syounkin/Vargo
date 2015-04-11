@@ -1,0 +1,5 @@
+This directory exists to house the html file created in the script
+getData.pl.  The data file, results.html, is temporary and should not
+be included in the git repository.  The results.html file may be
+useful for diagnostic purposes.  We shouldn't need this file, but it
+was an easy way to get started.
