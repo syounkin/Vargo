@@ -3,36 +3,49 @@
 use strict;
 use LWP::Simple;
 
-my $number = 514;
-my $direction = "S";
-my $streetname = "Baldwin";
-my $streettype = "St";
-my $city = "Madison";
 
-## my $url = "http://www.mge.com/customer-service/home/average-use-cost/results.htm?hn=314&sd=N&sn=Blount&ss=St&au=&c=Madison";
+open IN, "</home/sgy/Dropbox/Vargo/data/addresses.csv" or die $!;
+open OUT, ">./data/results.csv" or die $!;
 
-my $url = "http://www.mge.com/customer-service/home/average-use-cost/results.htm?hn=$number&sd=$direction&sn=$streetname&ss=$streettype&au=&c=$city";
+my $i = 0;
 
-my $filename = "./data/results.html";
+while (my $address = <IN>) {
+    if ( $i != 0 ){
+	chomp $address;
+	my ($number, $direction, $streetname, $streettype, $unit, $city ) = split /,/, $address;
 
-my $rc = getstore($url, $filename);
+	my $url = "http://www.mge.com/customer-service/home/average-use-cost/results.htm?hn=$number&sd=$direction&sn=$streetname&ss=$streettype&au=$unit&c=$city";
 
-if (is_error($rc)) {
-	die "getstore of <$url> failed with $rc";
-}
+	my $filename = "./data/results.html";
 
-open HTML, "<$filename" or die $!;
+	my $rc = getstore($url, $filename);
 
-my @data;
-
-while (my $line = <HTML>) {
-    if( $line =~ m/kWh/) {
-	if( $line =~ m/>(\d*)\&nbsp/){
-	    push(@data, $1);
+	if (is_error($rc)) {
+	    die "getstore of <$url> failed with $rc";
 	}
+
+	open HTML, "<$filename" or die $!;
+
+	my @data;
+
+	while (my $line = <HTML>) {
+	    if( $line =~ m/kWh/) {
+		if( $line =~ m/>(\d*)\&nbsp/){
+		    push(@data, $1);
+		}
+	    }
+	}
+
+	close HTML;
+
+	print OUT $address, ",", $data[0], ",", $data[1], ",", $data[2], "\n";
+
+
+    }else{
+	$i++;
     }
+    
 }
 
-close HTML;
-
-print "High: $data[0]\nLow: $data[1]\nAverage: $data[2]\n";
+close IN;
+close OUT;
