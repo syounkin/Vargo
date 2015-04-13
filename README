@@ -23,19 +23,19 @@ The repository contains the following directory structure:
 │   └── getData.pl
 └── README
 
-In getData.pl variables are defined for the house 514 S. Baldwin St.
-In the future we will include a front end to the script that reads in
-addresses from some sort of database.
-
 ~~~~~~~~~~~~~~~
 
 Usage:
 
 sgy@jhsph-box:~$ cd Vargo
+sgy@jhsph-box:~/Vargo$ more ~/Dropbox/Vargo/data/addresses.csv 
+hn,sd,sn,ss,au,c
+314,N,Blount,St,,Madison
+514,S,Baldwin,St,,Madison
 sgy@jhsph-box:~/Vargo$ perl ./perl/getData.pl 
-High: 750
-Low: 311
-Average: 497
+sgy@jhsph-box:~/Vargo$ more ./data/results.csv
+314,N,Blount,St,,Madison,511,180,315
+514,S,Baldwin,St,,Madison,750,311,497
 
 ~~~~~~~~~~~~~~~
 
