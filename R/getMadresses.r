@@ -28,5 +28,5 @@ names(MadParcels) <- c("hn","sd","sn","ss","au","c", "GIS_ID")
 
 test <- subset(MadParcels, sn == "WASHINGTON")
 
-write.csv(MadParcels,"./Maddresses.csv", row.names=F) 
+write.csv(MadParcels,"../../Dropbox/Vargo (1)/Maddresses.csv", row.names=F, na='', quote=FALSE) 
 
