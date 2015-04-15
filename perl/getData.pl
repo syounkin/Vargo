@@ -4,13 +4,15 @@ use strict;
 use LWP::Simple;
 
 
-open IN, "</home/sgy/Dropbox/Vargo/data/addresses.csv" or die $!;
+open IN, "</home/sgy/Dropbox/Vargo/data/Maddresses.csv" or die $!;
 open OUT, ">./data/results.csv" or die $!;
 
 my $i = 0;
 
 while (my $address = <IN>) {
     if ( $i != 0 ){
+
+	print $i, " of 160852", "\t", $address;
 	chomp $address;
 	my ($number, $direction, $streetname, $streettype, $unit, $city ) = split /,/, $address;
 
@@ -38,11 +40,15 @@ while (my $address = <IN>) {
 
 	close HTML;
 
+	# print $address, ",", $data[0], ",", $data[1], ",", $data[2], "\n";
 	print OUT $address, ",", $data[0], ",", $data[1], ",", $data[2], "\n";
 
+	$i++;
 
     }else{
+
 	$i++;
+
     }
     
 }
