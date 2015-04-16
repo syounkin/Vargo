@@ -22,9 +22,9 @@ while (my $address = <IN>) {
 
 	my $rc = getstore($url, $filename);
 
-	if (is_error($rc)) {
-	    die "getstore of <$url> failed with $rc";
-	}
+	# if (is_error($rc)) {
+	#     die "getstore of <$url> failed with $rc";
+	# }
 
 	open HTML, "<$filename" or die $!;
 
@@ -40,7 +40,6 @@ while (my $address = <IN>) {
 
 	close HTML;
 
-	# print $address, ",", $data[0], ",", $data[1], ",", $data[2], "\n";
 	print OUT $address, ",", $data[0], ",", $data[1], ",", $data[2], "\n";
 
 	$i++;
