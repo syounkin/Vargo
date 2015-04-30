@@ -8,9 +8,6 @@ use LWP::Simple;
 open IN, "</home/sgy/Dropbox/Vargo/data/Maddresses-with-Heat.csv" or die $!;
 open OUT, ">/home/sgy/Dropbox/Vargo/data/results.csv" or die $!;
 
-# open IN, "</home/sgy/Dropbox/Vargo/data/Maddresses-test.csv" or die $!;
-# open OUT, ">/home/sgy/Dropbox/Vargo/data/results-test.csv" or die $!;
-
 print OUT "vargo.ID,hn,sd,sn,ss,au,c,therms.high,therms.cost.high,therms.days.high,therms.low,therms.cost.low,therms.days.low,therms.average,therms.cost.average,kWh.high,kWh.cost.high,kWh.days.high,kWh.low,kWh.cost.low,kWh.days.low,kWh.average,kWh.cost.average\n";
 
 my $i = 0;
