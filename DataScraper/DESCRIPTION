@@ -1,0 +1,16 @@
+Package: DataScraper
+Type: Package
+Title: DataScraper
+Version: 0.0.1
+Date: Tue 05 May 2015 09:58:17 AM CDT
+Author: Samuel G. Younkin, Tedward Derker
+Maintainer: Samuel G. Younkin <samuel.younkin@gmail.com>
+Description: Data scraping utility designed for MGE data in Madison, Wisconsin.
+URL: http://www.syounkin.com
+License: GPL-2
+Depends:
+    R (>= 3.0.0)
+Suggests:
+    knitr
+VignetteBuilder: knitr
+SystemRequirements: 

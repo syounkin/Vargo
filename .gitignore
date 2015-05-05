@@ -1,2 +1,9 @@
 .Rhistory
 log/*
+*.pdf
+man
+*.tar.gz
+html
+..Rcheck
+data
+NAMESPACE

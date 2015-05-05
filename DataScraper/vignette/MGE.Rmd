@@ -1,0 +1,139 @@
+<<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Primary DataScraper Vignette}
+-->
+
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
+<link href="http://www.biostat.wisc.edu/~syounkin/markdown_modified.css" rel="stylesheet"></link>
+
+# DataScraper: an R package for simulating reads in RNA-seq experiments
+
+## Introduction
+
+```{r DataScraper, message=FALSE}
+library("DataScraper")
+library("dplyr")
+getwd()
+date()
+set.seed(1)
+```
+
+### Importing Assessor Property Information for Madison
+
+```{r input, eval = TRUE}
+prop_info<-read.csv(file = "./data/Assessor_Property_Information.csv", header=T, sep = ",", stringsAsFactors = FALSE)
+# prop_info[] <- lapply(prop_info, as.character)  # make variables characters, not factors
+prop_info<-tbl_df(prop_info)
+```
+
+```{r summary}
+colnames(prop_info)
+table(as.character(lapply(prop_info, class)))
+```
+
+###  Expand Address field to be multiple fields
+```{r expand}
+prop_info_expandedAddress <- expand_address(prop_info$Address)
+names(prop_info_expandedAddress)
+lapply(prop_info_expandedAddress, class)
+```
+
+Note that expand_address returns factors, not characters.
+
+```{r cat}
+prop_info_expandedAddress<-cbind(prop_info,prop_info_expandedAddress)
+```
+
+```{r summary2, eval = FALSE, echo = FALSE}
+class(prop_info_expandedAddress)
+names(prop_info_expandedAddress)
+lapply(prop_info_expandedAddress, class)
+```
+
+###  Remove non residential property classes from the table
+
+
+```{r non-residential}
+prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Class == "Residential")
+table(prop_info_expandedAddress$Property.Class)
+```
+
+```{r non-residential-old, eval = FALSE, echo = FALSE}
+prop_info_expandedAddress<-prop_info_expandedAddress %>%
+  filter(Property.Class=="Residential")
+```
+
+###  Remove  property with zero dwelling units
+
+```{r zero-dwelling, eval = TRUE}
+prop_info_expandedAddress <- subset(prop_info_expandedAddress, Dwelling.Units > 0)
+table(prop_info_expandedAddress$Dwelling.Units)
+```
+
+```{r zero-dwelling-old, eval = FALSE, echo = FALSE}
+prop_info_expandedAddress<-prop_info_expandedAddress %>%
+  filter(Dwelling.Units > 0)
+```
+
+### Setting base variables, data frames etc.
+
+Where is "Active_Address_List" defined?
+
+```{r main, eval = FALSE}
+
+### set the root url
+root_url<-"http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
+
+
+### create the output energy table comma separated file
+energy_table_column_headers<-c("therms_in_highest_billing_period","gas_cost_in_highest_billing_period","number_days_in_highest_gas_billing_period","therms_in_lowest_billing_period","gas_cost_in_lowest_billing_period","number_days_in_lowest_gas_billing_period","therms_monthly_average","gas_cost_monthly_average","number_days_monthly_average","gas_used_for_heating","kilowatthours_in_highest_billing_period","electric_cost_in_highest_billing_period","number_days_in_highest_electric_billing_period","kilowatthours_in_lowest_billing_period","electric_cost_in_lowest_billing_period","number_days_in_lowest_electric_billing_period","kilowatthours_monthly_average","electric_cost_monthly_average","number_days_monthly_average","electric_used_for_heating","Date_Scraped","Time_Scraped",colnames(Active_Address_List))
+energy_table<-formatted_energy_table<-data.frame(matrix(NA,nrow=0,ncol=length(energy_table_column_headers)))
+colnames(energy_table)<-energy_table_column_headers
+write.table(energy_table, file = "Energy_Table.csv", sep = ",")
+
+### The loop to output a csv
+for (i in 61135:63000) {
+  ### prepping the URL
+  house_number<-Active_Address_List$Address_Num[i]   # set house number
+  street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
+  street_name<-Active_Address_List$Address_StreetName[i]   #set street name
+  street_suffix<-Active_Address_List$Address_StreetType[i]   #set street suffix/Type
+  apartment_unit<-Active_Address_List$Address_UnitNum[i]   #set au
+  city<-"Madison"
+  ###combine to create full url
+  full_mge_url<-paste(sep="",root_url,"hn=",house_number,"&sd=",street_direction,"&sn=",street_name,"&ss=",street_suffix,"&au=",apartment_unit,"&c=",city)
+  
+  #test if the webpage exists
+  energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent=TRUE) 
+    if ('try-error' %in% class(energy_table)) {
+      energy_table<-data.frame(matrix(NA,nrow = 1,ncol = 107))
+    } else {
+    ### extracting the table from the webpage
+    energy_table<-reshape_EnergyUseTable(energy_table)
+    energy_table[1,21]<-as.Date(Sys.Date())
+    energy_table[1,22]<-Sys.time()
+    #### I should also extract the address as it is on their website to check if it is the same as the address I entered.
+  }
+  energy_table[1,23:(23+length(Active_Address_List[i,]))]<-Active_Address_List[i,]
+  if (i == 1){
+    write.table(energy_table, file = "Energy_Table.csv", sep = ",", col.names = FALSE, append=FALSE,row.names = F)
+  } else {
+    write.table(energy_table, file = "Energy_Table.csv", sep = ",", col.names = FALSE, append=TRUE,row.names = F)
+  }
+  print(i)
+  flush.console()
+  ##### suspend execution of for loop for seconds #####
+  Sys.sleep(runif(1,min = 0,max=10))
+}
+
+
+
+
+
+#erase the energy csv
+write.table(file = "Energy_Table.csv", sep = ",", col.names = FALSE, append=FALSE,row.names = F)
+```
+
+```{r session}
+sessionInfo()
+```
