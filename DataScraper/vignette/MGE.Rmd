@@ -13,6 +13,7 @@
 ```{r DataScraper, message=FALSE}
 library("DataScraper")
 library("dplyr")
+library("XML")
 getwd()
 date()
 set.seed(1)
@@ -38,7 +39,8 @@ names(prop_info_expandedAddress)
 lapply(prop_info_expandedAddress, class)
 ```
 
-Note that expand_address returns factors, not characters.
+Note that expand_address returns factors, not characters.  This could
+cause bugs down the road.
 
 ```{r cat}
 prop_info_expandedAddress<-cbind(prop_info,prop_info_expandedAddress)
@@ -56,11 +58,12 @@ lapply(prop_info_expandedAddress, class)
 ```{r non-residential}
 prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Class == "Residential")
 table(prop_info_expandedAddress$Property.Class)
+nrow(prop_info_expandedAddress)
 ```
 
 ```{r non-residential-old, eval = FALSE, echo = FALSE}
 prop_info_expandedAddress<-prop_info_expandedAddress %>%
-  filter(Property.Class=="Residential")
+  filter(Property.Class == "Residential")
 ```
 
 ###  Remove  property with zero dwelling units
@@ -68,6 +71,7 @@ prop_info_expandedAddress<-prop_info_expandedAddress %>%
 ```{r zero-dwelling, eval = TRUE}
 prop_info_expandedAddress <- subset(prop_info_expandedAddress, Dwelling.Units > 0)
 table(prop_info_expandedAddress$Dwelling.Units)
+nrow(prop_info_expandedAddress)
 ```
 
 ```{r zero-dwelling-old, eval = FALSE, echo = FALSE}
@@ -75,7 +79,50 @@ prop_info_expandedAddress<-prop_info_expandedAddress %>%
   filter(Dwelling.Units > 0)
 ```
 
-### Setting base variables, data frames etc.
+What is Active_Address_List?
+
+```{r sgy}
+Active_Address_List <- prop_info_expandedAddress
+root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
+
+energy.table.list <- list()
+
+date()
+
+for( i in 1:100 ){
+
+  house_number<-Active_Address_List$Address_Num[i]   # set house number
+  street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
+  street_name<-Active_Address_List$Address_StreetName[i]   #set street name
+  street_suffix<-Active_Address_List$Address_StreetType[i]   #set street suffix/Type
+  apartment_unit<-Active_Address_List$Address_UnitNum[i]   #set au
+  city<-"Madison"
+  
+  (full_mge_url<-paste(sep="",root_url,"hn=",house_number,"&sd=",street_direction,"&sn=",street_name,"&ss=",street_suffix,"&au=",apartment_unit,"&c=",city))
+
+  energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent=TRUE)
+
+  energy.table.list <- c(energy.table.list, energy_table)
+
+}
+
+saveRDS(energy.table.list, file = "./data/energy.table.list.rds")
+
+date()
+
+```
+
+```{r show}
+energy.table.list[[1]]
+length(energy.table.list)
+```
+
+```{r session}
+sessionInfo()
+```
+
+### Appendix
+#### Setting base variables, data frames etc.
 
 Where is "Active_Address_List" defined?
 
@@ -132,8 +179,4 @@ for (i in 61135:63000) {
 
 #erase the energy csv
 write.table(file = "Energy_Table.csv", sep = ",", col.names = FALSE, append=FALSE,row.names = F)
-```
-
-```{r session}
-sessionInfo()
 ```
