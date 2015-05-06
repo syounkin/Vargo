@@ -89,6 +89,7 @@ date()
 
 energy.table.list <- list()
 
+#for( i in 1:100 ){
 for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number

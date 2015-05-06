@@ -12,5 +12,5 @@ html:
 #	cd /ua/kendzior/public_html/CKGROUP/YOUNKIN/DataScraper-html/; touch ./*.html
 
 MGE:
-	R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")'
+	/home/sgy/bin/R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")'
 	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put ./html/MGE.html; quit"
