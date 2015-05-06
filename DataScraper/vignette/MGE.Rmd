@@ -85,11 +85,9 @@ What is Active_Address_List?
 Active_Address_List <- prop_info_expandedAddress
 root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
 
-energy.table.list <- list()
-
 date()
 
-for( i in 1:100 ){
+for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
