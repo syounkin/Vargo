@@ -6,9 +6,9 @@
 <link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
 <link href="http://www.biostat.wisc.edu/~syounkin/markdown_modified.css" rel="stylesheet"></link>
 
-# DataScraper: an R package for simulating reads in RNA-seq experiments
+# DataScraper
 
-## Introduction
+## Load Libraries
 
 ```{r DataScraper, message=FALSE}
 library("DataScraper")
