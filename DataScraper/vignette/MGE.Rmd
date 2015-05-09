@@ -86,11 +86,12 @@ Active_Address_List <- prop_info_expandedAddress
 root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
 
 date()
+(timestamp <- gsub("\\s|:","-",Sys.time()))
 
 energy.table.list <- list()
 
-#for( i in 1:100 ){
-for( i in 1:nrow(Active_Address_List) ){
+for( i in 1:10 ){
+#for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
@@ -107,7 +108,7 @@ for( i in 1:nrow(Active_Address_List) ){
 
 }
 
-saveRDS(energy.table.list, file = "./data/energy.table.list.rds")
+saveRDS(energy.table.list, file = paste("~/Dropbox/Vargo/data/energyTables/energy.table.list-", timestamp, ".rds", sep = ""))
 
 date()
 

@@ -1,0 +1,57 @@
+<<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Primary DataScraper Vignette}
+-->
+
+<link href="http://kevinburke.bitbucket.org/markdowncss/markdown.css" rel="stylesheet"></link>
+<link href="http://www.biostat.wisc.edu/~syounkin/markdown_modified.css" rel="stylesheet"></link>
+
+# DataScraper
+
+## Load Libraries
+
+```{r DataScraper, message=FALSE}
+library("DataScraper")
+getwd()
+date()
+set.seed(1)
+```
+
+
+```{r input, eval = TRUE}
+data <- readRDS(file="~/Dropbox/Vargo/data/energyTables/energy.table.list-2015-05-08.rds")
+}
+```
+```{r test}
+testEntry <- data[[1]]
+parsedTestEntry <- parseEnergyTable(testEntry)
+```
+
+```{r test2}
+parsedEnergyList <- lapply(data, parseEnergyTable)
+names(parsedEnergyList) <- paste("Prop",1:length(parsedEnergyList), sep = "")
+head(parsedEnergyList,2)
+}
+```
+
+```{r test3}
+therms.length <- lapply(parsedEnergyList,function(x)length(x$therms))
+table(therms.length)
+
+goodIndex <- which(therms.length == 3)
+oneIndex <- which(therms.length == 1)
+zeroIndex <- which(therms.length == 0)
+
+if(!((length(goodIndex) + length(oneIndex) + length(zeroIndex)) == length(data))){
+  message("Error Code 1")
+}
+
+1-length(zeroIndex)/length(parsedEnergyList)
+
+```
+
+```{r read}
+propertyInfo <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv")
+head(propertyInfo[zeroIndex,2:4], 25)
+```
+
