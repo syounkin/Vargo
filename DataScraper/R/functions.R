@@ -83,3 +83,80 @@ reshape_EnergyUseTable<- function (EnergyUseTable) {
   }
   return(data.frame(output_EnergyUseTable))
 }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Parses the energy tables
+#'
+#' @param energyTable a list of vectors as returned by readHTMLTable
+#' and the MGE web page.  Currently only 
+#' @return a list with five numeric vectors; therms, kWh, therms.dollar,
+#' kWh.dollar, therms.days, kWh.days
+#' @author Samuel Younkin
+#' @export
+parseEnergyTable<- function (energyTable) {
+
+    if( length(energyTable) != 1 ){
+
+        energyTable <- as.data.frame(energyTable)
+    
+        if( all(dim(energyTable) == c(7,6)) ){
+            therms <- energyTable[1:3,2]
+            kWh <- energyTable[5:7,2]
+            therms.dollar <- energyTable[1:3,3]
+            kWh.dollar <- energyTable[5:7,3]
+            therms.days <- energyTable[1:2,4]
+            kWh.days <- energyTable[5:6,4]
+            
+            therms <- as.numeric(unlist(strsplit(as.character(therms), ".therms", perl = TRUE)))
+            kWh <- as.numeric(unlist(strsplit(as.character(therms), ".kWh", perl = TRUE)))
+            therms.dollar <- as.numeric(gsub("\\$","", therms.dollar))
+            kWh.dollar <- as.numeric(gsub("\\$","", kWh.dollar))
+            therms.days <- as.numeric(gsub(" days","", therms.days))
+            kWh.days <- as.numeric(gsub(" days","", kWh.days))
+            
+            energyData <- list(therms=therms,kWh=kWh,therms.dollar=therms.dollar,kWh.dollar=kWh.dollar,therms.days=therms.days,kWh.days=kWh.days)
+        
+        } else if(all(dim(energyTable) == c(3,5))){ # Either only therms or only kWh
+
+            
+            if( all(grepl("therms",energyTable[,2])) ){ # therms
+                therms <- energyTable[1:3,2]
+                therms.dollar <- energyTable[1:3,3]
+                therms.days <- energyTable[1:2,4]
+
+                therms <- as.numeric(unlist(strsplit(as.character(therms), ".therms", perl = TRUE)))
+                therms.dollar <- as.numeric(gsub("\\$","", therms.dollar))
+                therms.days <- as.numeric(gsub(" days","", therms.days))
+
+                energyData <- list(therms=therms,kWh=NA,therms.dollar=therms.dollar,kWh.dollar=NA,therms.days=therms.days,kWh.days=NA)
+
+            }else if( all(grepl("kWh",energyTable[,2])) ){ # kWh
+                kWh <- energyTable[1:3,2]
+                kWh.dollar <- energyTable[1:3,3]
+                kWh.days <- energyTable[1:2,4]
+
+                kWh <- as.numeric(unlist(strsplit(as.character(kWh), ".kWh", perl = TRUE)))
+                kWh.dollar <- as.numeric(gsub("\\$","", kWh.dollar))
+                kWh.days <- as.numeric(gsub(" days","", kWh.days))
+
+                energyData <- list(therms=NA,kWh=kWh,therms.dollar=NA,kWh.dollar=kWh.dollar,therms.days=NA,kWh.days=kWh.days)
+
+            }else{
+                energyData <- list("")
+            }
+
+        }else{
+
+            energyData <- list()
+        }
+
+    } else{
+
+        energyData <- list()
+
+    }
+
+    return( energyData )
+
+}
