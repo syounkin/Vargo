@@ -17,3 +17,7 @@ html: foo
 MGE:
 	/home/sgy/bin/R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")'
 	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put ./html/MGE.html; quit"
+
+postProcess:
+	/home/sgy/bin/R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/postProcess.Rmd","./html/postProcess.html")'
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put ./html/postProcess.html; quit"
