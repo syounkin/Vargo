@@ -4,12 +4,15 @@ pdf:
 	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
 	R CMD Rd2pdf --no-preview --force ../DataScraper/
 
-html:
+html: foo
 	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
 	R CMD INSTALL --html --no-inst ../DataScraper/
-#	cp -v ~/R/x86_64-redhat-linux-gnu-library/3.0/DataScraper/html/* /ua/kendzior/public_html/CKGROUP/YOUNKIN/DataScraper-html/
-#	cp -v ~/R/x86_64-redhat-linux-gnu-library/3.0/DataScraper/DESCRIPTION /ua/kendzior/public_html/CKGROUP/YOUNKIN/
-#	cd /ua/kendzior/public_html/CKGROUP/YOUNKIN/DataScraper-html/; touch ./*.html
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/00Index.html; quit"
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/DataScraper.html; quit"
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/expand_address.html; quit"
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/parseEnergyTable.html; quit"
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/R.css; quit"
+	lftp -u 'syounk5','5(9MFSfV' syounkin.com -e "cd public_html/Vargo/DataScraper; put /home/sgy/lib/R-3.1.3/library/DataScraper/html/reshape_EnergyUseTable.html; quit"
 
 MGE:
 	/home/sgy/bin/R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")'
