@@ -33,20 +33,11 @@ table(as.character(lapply(prop_info, class)))
 ###  Expand Address field to be multiple fields
 ```{r expand}
 prop_info_expandedAddress <- expand_address(prop_info$Address)
-names(prop_info_expandedAddress)
-lapply(prop_info_expandedAddress, class)
-```
-
-Note that expand_address returns factors, not characters.  This could
-cause bugs down the road.
-
-```{r cat}
 prop_info_expandedAddress <- cbind(prop_info, prop_info_expandedAddress)
 ```
 
 ###  Remove non residential property classes from the table & Remove
 ###  property with zero dwelling units
-
 
 ```{r non-residential}
 prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Class == "Residential")
@@ -63,9 +54,9 @@ root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.h
 
 energy.table.list <- list()
 
-n <- 100
-for( i in 1:n ){
-#for( i in 1:nrow(Active_Address_List) ){
+#n <- 10
+#for( i in 1:n ){
+for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
@@ -82,8 +73,8 @@ for( i in 1:n ){
 
 }
 
-names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
-## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
+## names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
+names(energy.table.list) <- as.character(Active_Address_List$Parcel)
 
 saveRDS(energy.table.list, file = paste("~/Dropbox/Vargo/data/energyTables/energy.table.list-", timestamp, ".rds", sep = ""))
 
@@ -103,12 +94,7 @@ failureIndex <- which(unlist(lapply(parsedEnergyList,function(x)length(x)==0)))
 ```
 
 ```{r energyFile}
-energy.df <- reshapeEnergyTableList(parsedEnergyList,paste("~/Dropbox/Vargo/data/energyTables/energyFile-",timestamp,sep=""))
-head(energy.df)
-```
-
-```{r badIndex}
-energy.df[failureIndex,]
+energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("~/Dropbox/Vargo/data/energyTables/energyFile-",timestamp,sep=""))
 ```
 
 ```{r session}
