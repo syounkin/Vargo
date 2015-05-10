@@ -42,14 +42,14 @@ NULL
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 expand_address<-function (AddressList){
   rexp <- "^([0-9]+)\\s?(N\\s|S\\s|E\\s|W\\s)?(.*)\\s(Ln|Dr|Blvd|Ave|Ct|Cir|St|Rd|Pl|Pass|Trl|Ter|Pkwy|Way)\\s?(Unit)?\\s?(\\w*)"
-  Address_Num=sub(rexp,"\\1",AddressList)
-  Address_StreetDirection=sub(rexp,"\\2",AddressList)
-  Address_StreetName=sub(rexp,"\\3",AddressList)
+  Address_Num=as.character(sub(rexp,"\\1",AddressList))
+  Address_StreetDirection=as.character(sub(rexp,"\\2",AddressList))
+  Address_StreetName=as.character(sub(rexp,"\\3",AddressList))
   Address_StreetName<-gsub(" ","+",Address_StreetName)
-  Address_StreetType=sub(rexp,"\\4",AddressList)
-  Address_Unit=sub(rexp,"\\5",AddressList)
-  Address_UnitNum=sub(rexp,"\\6",AddressList)
-  return (data.frame(Address_Num,Address_StreetDirection,Address_StreetName,Address_StreetType,Address_Unit,Address_UnitNum))
+  Address_StreetType=as.character(sub(rexp,"\\4",AddressList))
+  Address_Unit=as.character(sub(rexp,"\\5",AddressList))
+  Address_UnitNum=as.character(sub(rexp,"\\6",AddressList))
+  return (data.frame(Address_Num,Address_StreetDirection,Address_StreetName,Address_StreetType,Address_Unit,Address_UnitNum, stringsAsFactors = FALSE))
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
