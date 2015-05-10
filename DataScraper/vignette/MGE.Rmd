@@ -55,8 +55,8 @@ root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.h
 energy.table.list <- list()
 
 n <- 10
-for( i in 1:n ){
-#for( i in 1:nrow(Active_Address_List) ){
+#for( i in 44440:(44440+n) ){
+for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
@@ -73,8 +73,8 @@ for( i in 1:n ){
 
 }
 
-names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
-## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
+## names(energy.table.list) <- as.character(Active_Address_List$Parcel)[44440:(44440+n)]
+names(energy.table.list) <- as.character(Active_Address_List$Parcel)
 
 saveRDS(energy.table.list, file = paste("~/Dropbox/Vargo/data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
 
@@ -101,7 +101,7 @@ energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("~/Dropbo
 parcelData <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv", stringsAsFactors = FALSE)
 
 dataFull <- merge(energy.df,parcelData,by.x="parcel",by.y="Parcel")
-dataFull[44440,]
+dataFull[1,]
 ```
 
 ```{r session}
