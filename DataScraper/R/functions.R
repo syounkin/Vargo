@@ -129,7 +129,7 @@ parseEnergyTable<- function (energyTable) {
                 therms.dollar <- as.numeric(gsub("\\$","", therms.dollar))
                 therms.days <- as.numeric(gsub(" days","", therms.days))
 
-                energyData <- list(therms=therms,kWh=NA,therms.dollar=therms.dollar,kWh.dollar=NA,therms.days=therms.days,kWh.days=NA)
+                energyData <- list(therms=therms,kWh=rep(NA,3),therms.dollar=therms.dollar,kWh.dollar=rep(NA,3),therms.days=therms.days,kWh.days=rep(NA,2))
 
             }else if( all(grepl("kWh",energyTable[,2])) ){ # kWh
                 kWh <- energyTable[1:3,2]
@@ -140,7 +140,7 @@ parseEnergyTable<- function (energyTable) {
                 kWh.dollar <- as.numeric(gsub("\\$","", kWh.dollar))
                 kWh.days <- as.numeric(gsub(" days","", kWh.days))
 
-                energyData <- list(therms=NA,kWh=kWh,therms.dollar=NA,kWh.dollar=kWh.dollar,therms.days=NA,kWh.days=kWh.days)
+                energyData <- list(therms=rep(NA,3),kWh=kWh,therms.dollar=rep(NA,3),kWh.dollar=kWh.dollar,therms.days=rep(NA,2),kWh.days=kWh.days)
 
             }else{
                 energyData <- list("")
@@ -159,4 +159,34 @@ parseEnergyTable<- function (energyTable) {
 
     return( energyData )
 
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Writes data to a file
+#'
+#' @param energyTableList a list of lists as returned by the function
+#' parseEnergyTable
+#' @param filename character string giving the file name for the data file
+#' @return A data frame containing the data in the energyTableList
+#' with rows as properties and 16 colums.
+#' @author Samuel Younkin
+#' @export
+reshapeEnergyTableList <- function (energyTableList, filename) {
+
+    foo <- lapply(energyTableList, function(energyTable) {
+        if(length(energyTable) != 0){
+            return(c( energyTable$therms, energyTable$kWh, energyTable$therms.dollar, energyTable$kWh.dollar,energyTable$therms.days, energyTable$kWh.days))
+        }else{
+            return(rep(NA,16))
+        }
+    })
+    foobar <- data.frame(parcel = as.character(names(energyTableList)), t(as.data.frame(foo)),stringsAsFactors=FALSE)
+    
+    colnames(foobar) <- c("parcel","therms.1","therms.2","therms.3","kWh.1","kWh.2","kWh.3","therms.dollar.1","therms.dollar.2","therms.dollar.3","kWh.dollar.1","kWh.dollar.2","kWh.dollar.3","therms.days.1","therms.days.2","kWh.days.1","kWh.days.2")
+
+
+    write.table(foobar, file = filename, sep = ",", quote = FALSE, row.names=FALSE, col.names = TRUE)
+    
+    return(foobar)
 }
