@@ -108,7 +108,7 @@ head(energy.df)
 ```
 
 ```{r badIndex}
-energy.df[failureIndex]
+energy.df[failureIndex,]
 ```
 
 ```{r session}
