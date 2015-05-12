@@ -7,6 +7,6 @@ Welcome to the Vargo repository! I hope you will be loving it!
 
 To run the MGE data scraper simply run the script in
 
-```bash
+```Bash
 ~/Vargo/DataScraper/bash/MGE
 ```
