@@ -16,7 +16,7 @@ date()
 ### Import Assessor Property Information for Madison
 
 ```{r input, eval = TRUE}
-prop_info <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv", header=T, sep = ",", stringsAsFactors = FALSE)
+prop_info <- read.csv(file = "./data/energyTables/Assessor_Property_Information.csv", header=T, sep = ",", stringsAsFactors = FALSE)
 ```
 
 ###  Expand Address field to be multiple fields
@@ -75,7 +75,7 @@ for( i in 1:n ){
 names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
 ## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
 
-saveRDS(energy.table.list, file = paste("~/Dropbox/Vargo/data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
+saveRDS(energy.table.list, file = paste("./data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
 date()
 ```
 
@@ -97,7 +97,7 @@ failureIndex <- which(unlist(lapply(parsedEnergyList,function(x)length(x)==0)))
 ### Write parsed data to file
 
 ```{r energyFile}
-energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("~/Dropbox/Vargo/data/energyTables/energyFile-",timestamp,".csv",sep=""))
+energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("./data/energyTables/energyFile-",timestamp,".csv",sep=""))
 ```
 
 ### Merge results to property data with "parcel" number
