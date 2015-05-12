@@ -54,38 +54,6 @@ expand_address<-function (AddressList){
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Reshape energy use table. (Deprecated)
-#'
-#' @param EnergyUseTable deprecated
-#' @note Reshape the html energy use data table to be one row.
-#' EnergyUseTable<-gas_energy_table EnergyUseTable<-ele_energy_table
-#' EnergyUseTable<-full_energy_table str(EnergyUseTable)
-#' str(unlist(ele_energy_table)) View(EnergyUseTable)
-#' @return A dataframe with re-ordered columns.
-#' @author Tedward Erker
-#' @export
-reshape_EnergyUseTable<- function (EnergyUseTable) {
-  output_EnergyUseTable<-data.frame(matrix(NA,nrow=1,ncol=107))
-  EnergyUseTable<-unlist(EnergyUseTable)
-  # EnergyUseTable[1,1:5]<-EnergyUseTable[1,2:6]
-  #making adjustments to the energy table if it includes both gas and electric
-  # pull values from the webpage table and put in formatted_EnergyUseTable.  Two different ways because some have gas and others don't
-  if(length(EnergyUseTable)>24){
-    values<-c(EnergyUseTable[c(8,15,22,9,16,23,10,17,24,29,12,19,26,13,20,27,14,21,28,33)])
-    output_EnergyUseTable[1,1:20]<-values
-  } else {
-    values<-c(EnergyUseTable[c(4,7,10,5,8,11,6,9,12,13)])
-    if (length(grep("therms",values[1]))>0){
-      output_EnergyUseTable[1,1:10]<-values
-    } else {
-      output_EnergyUseTable[1,11:20]<-values
-    }
-  }
-  return(data.frame(output_EnergyUseTable))
-}
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #' Parses the energy tables
 #'
 #' @param energyTable a list of vectors as returned by readHTMLTable
