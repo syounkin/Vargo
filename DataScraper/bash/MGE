@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/sgy/Vargo/DataScraper/
-make MGE &> /home/sgy/Vargo/log/MGE.log
+cd ~/Vargo/DataScraper/
+make MGE
