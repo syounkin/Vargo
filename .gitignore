@@ -8,6 +8,7 @@ html
 data
 NAMESPACE
 *.md
+!README.md
 foo
 energyFile
 archive
