@@ -4,7 +4,7 @@ pdf:
 	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
 	R CMD Rd2pdf --no-preview --force ../DataScraper/
 
-html: foo
+html:
 	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
 	R CMD INSTALL --html --no-inst ../DataScraper/
 

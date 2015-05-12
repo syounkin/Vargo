@@ -6,7 +6,7 @@ Date: Sun 10 May 2015 10:54:38 AM CDT
 Author: Samuel G. Younkin, Tedward Derker
 Maintainer: Samuel G. Younkin <samuel.younkin@gmail.com>
 Description: Data scraping utility designed for MGE data in Madison, Wisconsin.
-URL: http://www.syounkin.com
+URL:
 License: GPL-2
 Depends:
     R (>= 3.0.0)

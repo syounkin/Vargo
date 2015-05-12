@@ -1,3 +1,5 @@
 #!/bin/bash
-cd ~/Vargo/DataScraper/
+## Set the location of the Vargo repository
+DIR=$HOME # Mine is in my home directory
+cd $DIR/Vargo/DataScraper/
 make MGE
