@@ -12,32 +12,28 @@
 
 ```{r DataScraper, message=FALSE}
 library("DataScraper")
-#library("dplyr")
 library("XML")
 require("parallel")
 getwd()
 date()
-set.seed(1)
 ```
 
-### Importing Assessor Property Information for Madison
+### Import Assessor Property Information for Madison
 
 ```{r input, eval = TRUE}
 prop_info <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv", header=T, sep = ",", stringsAsFactors = FALSE)
 ```
 
-```{r summary}
-table(as.character(lapply(prop_info, class)))
-```
-
 ###  Expand Address field to be multiple fields
+
+Here we use the functions written by Tewdard to parse the property file.
+
 ```{r expand}
 prop_info_expandedAddress <- expand_address(prop_info$Address)
 prop_info_expandedAddress <- cbind(prop_info, prop_info_expandedAddress)
 ```
 
-###  Remove non residential property classes from the table & Remove
-###  property with zero dwelling units
+###  Keep only residential, single unit, single family properties
 
 ```{r non-residential}
 prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Class == "Residential")
@@ -45,19 +41,19 @@ prop_info_expandedAddress <- subset(prop_info_expandedAddress, Dwelling.Units ==
 prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Use == "Single family")
 ```
 
+### Loop through addresses and pull html tables from MGE web-page
+
 ```{r mge}
 date()
+
 Active_Address_List <- prop_info_expandedAddress
-dim(Active_Address_List)
 root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
-
-(timestamp <- gsub("\\s|:","-",Sys.time()))
-
+timestamp <- gsub("\\s|:","-",Sys.time())
 energy.table.list <- list()
 
-# n <- 10
-# for( i in 1:n ){
-for( i in 1:nrow(Active_Address_List) ){
+n <- 10
+for( i in 1:n ){
+## for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
@@ -66,45 +62,63 @@ for( i in 1:nrow(Active_Address_List) ){
   apartment_unit<-Active_Address_List$Address_UnitNum[i]   #set au
   city<-"Madison"
   
-  full_mge_url<-paste(sep="",root_url,"hn=",house_number,"&sd=",street_direction,"&sn=",street_name,"&ss=",street_suffix,"&au=",apartment_unit,"&c=",city)
+  full_mge_url<-paste( root_url,
+                      "hn=",house_number,
+                      "&sd=",street_direction,
+                      "&sn=",street_name,
+                      "&ss=",street_suffix,
+                      "&au=",apartment_unit,
+                      "&c=",city,sep=""
+                      )
 
-  energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent=TRUE)
+  energy_table <- readHTMLTable(full_mge_url,as.data.frame=F)
 
   energy.table.list <- c(energy.table.list, energy_table)
 
 }
 
-# names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
-names(energy.table.list) <- as.character(Active_Address_List$Parcel)
+names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
+## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
 
 saveRDS(energy.table.list, file = paste("~/Dropbox/Vargo/data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
-
 date()
-
 ```
+
+### Parse data object with multiple cores
 
 ```{r test2, error = FALSE, warning = FALSE}
 parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable,mc.cores = 8)
 ```
 
-```{r test3, error = FALSE, warning = FALSE}
-therms.NA <- unlist(lapply(parsedEnergyList,function(x)is.na(x$therms)||is.na(x$kWh)))
-NAIndex <- which(therms.NA)
+### Failures have NULL entries (with length equal to zero)
+
+Calculate the success rate.
+
+```{r failed}
 failureIndex <- which(unlist(lapply(parsedEnergyList,function(x)length(x)==0)))
 1 - length(failureIndex)/length(parsedEnergyList)
 ```
+
+### Write parsed data to file
 
 ```{r energyFile}
 energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("~/Dropbox/Vargo/data/energyTables/energyFile-",timestamp,".csv",sep=""))
 ```
 
-```{r merge}
-parcelData <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv", stringsAsFactors = FALSE)
+### Merge results to property data with "parcel" number
 
-dataFull <- merge(energy.df,parcelData,by.x="parcel",by.y="Parcel")
-dataFull[1,]
+```{r merge}
+dataFull <- merge(energy.df, prop_info, by.x="parcel", by.y="Parcel")
 ```
+
+
+What version of R and R packages were used?  See below.
 
 ```{r session}
 sessionInfo()
+```
+
+```{r test3, error = FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
+therms.NA <- unlist(lapply(parsedEnergyList,function(x)is.na(x$therms)||is.na(x$kWh)))
+NAIndex <- which(therms.NA)
 ```
