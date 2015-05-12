@@ -5,7 +5,7 @@
 #' website.
 #' @name DataScraper
 #' @docType package
-#' @author Samuel G. Younkin \email{syounkin@@stat.wisc.edu}, Tedward Erker, Jason Vargo
+#' @author Samuel G. Younkin \email{samuel.younkin@@gmail.com}, Tedward Erker, Jason Vargo
 NULL
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -54,9 +54,9 @@ expand_address<-function (AddressList){
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#' Reshape energy use table.
+#' Reshape energy use table. (Deprecated)
 #'
-#' @param EnergyUseTable ???
+#' @param EnergyUseTable deprecated
 #' @note Reshape the html energy use data table to be one row.
 #' EnergyUseTable<-gas_energy_table EnergyUseTable<-ele_energy_table
 #' EnergyUseTable<-full_energy_table str(EnergyUseTable)

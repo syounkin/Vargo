@@ -21,7 +21,7 @@ prop_info <- read.csv(file = "./data/energyTables/Assessor_Property_Information.
 
 ###  Expand Address field to be multiple fields
 
-Here we use the functions written by Tewdard to parse the property file.
+Here we use a function written by Tewdard to parse the property file.
 
 ```{r expand}
 prop_info_expandedAddress <- expand_address(prop_info$Address)
@@ -81,6 +81,10 @@ date()
 
 ### Parse data object with multiple cores
 
+Here we take the raw data from the web-server and transform it to a
+more manageable form.  We do so using mclapply and take advatage of
+multiple cores.
+
 ```{r test2, error = FALSE, warning = FALSE}
 parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable,mc.cores = 8)
 ```
@@ -96,24 +100,25 @@ failureIndex <- which(unlist(lapply(parsedEnergyList,function(x)length(x)==0)))
 
 ### Write parsed data to file
 
+Now we reshape the parsed enegry list to a data frame and write the
+data to a ".csv" file.
+
 ```{r energyFile}
 energy.df <- reshapeEnergyTableList(parsedEnergyList, filename = paste("./data/energyTables/energyFile-",timestamp,".csv",sep=""))
 ```
 
 ### Merge results to property data with "parcel" number
 
+It's easy to merge the energy usage data with the property info.
+
 ```{r merge}
 dataFull <- merge(energy.df, prop_info, by.x="parcel", by.y="Parcel")
 ```
 
+### Session Info
 
-What version of R and R packages were used?  See below.
+What version of R and R packages were used?  We list that here.
 
 ```{r session}
 sessionInfo()
-```
-
-```{r test3, error = FALSE, warning = FALSE, echo = FALSE, eval = FALSE}
-therms.NA <- unlist(lapply(parsedEnergyList,function(x)is.na(x$therms)||is.na(x$kWh)))
-NAIndex <- which(therms.NA)
 ```
