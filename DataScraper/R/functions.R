@@ -89,7 +89,7 @@ reshape_EnergyUseTable<- function (EnergyUseTable) {
 #' Parses the energy tables
 #'
 #' @param energyTable a list of vectors as returned by readHTMLTable
-#' and the MGE web page.  Currently only 
+#' and the MGE web page.
 #' @return a list with five numeric vectors; therms, kWh, therms.dollar,
 #' kWh.dollar, therms.days, kWh.days
 #' @author Samuel Younkin
@@ -109,7 +109,7 @@ parseEnergyTable<- function (energyTable) {
             kWh.days <- energyTable[5:6,4]
             
             therms <- as.numeric(unlist(strsplit(as.character(therms), ".therms", perl = TRUE)))
-            kWh <- as.numeric(unlist(strsplit(as.character(therms), ".kWh", perl = TRUE)))
+            kWh <- as.numeric(unlist(strsplit(as.character(kWh), ".kWh", perl = TRUE)))
             therms.dollar <- as.numeric(gsub("\\$","", therms.dollar))
             kWh.dollar <- as.numeric(gsub("\\$","", kWh.dollar))
             therms.days <- as.numeric(gsub(" days","", therms.days))

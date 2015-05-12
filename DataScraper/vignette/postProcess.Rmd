@@ -1,0 +1,17 @@
+```{r data}
+energyData <- read.csv(file = "~/Dropbox/Vargo/data/energyTables/energyFile-2015-05-11-23-59-11.csv", stringsAsFactors = FALSE)
+parcelData <- read.csv(file="~/Dropbox/Vargo/data/energyTables/Assessor_Property_Information.csv")
+data <- merge(energyData, parcelData,by.x="parcel",by.y="Parcel")
+```
+```{r NA}
+naIndex <- which(apply(energyData,1,function(x) sum(is.na(x)))!=0)
+```
+
+```{r badParcels}
+badParcels <- energyData[which(!is.na(energyData$therms.days.1) & is.na(energyData$therms.1)),"parcel"]
+as.character(subset(data,parcel %in% badParcels)$Address)
+```
+
+```{r head}
+dataNonMissing <- data[-naIndex,]
+```
