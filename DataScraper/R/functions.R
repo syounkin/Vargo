@@ -158,3 +158,18 @@ reshapeEnergyTableList <- function (energyTableList, filename) {
     
     return(foobar)
 }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' Identifies outliers
+#'
+#' @param vec
+#' @return a logical vector
+#' @author Samuel Younkin
+#' @export
+isOutlier <- function(vec){
+    vec <- as.numeric(vec)
+    iqr <- c(-1,1)%*%quantile(vec,c(0.25,0.75),na.rm=TRUE)
+    thresh <- quantile(vec,c(0.25,0.75), na.rm=TRUE)+c(-1,1)*1.5*iqr
+    return((vec < thresh[1] | vec > thresh[2]) & !is.na(vec))
+}
