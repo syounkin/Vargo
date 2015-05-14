@@ -1,3 +1,4 @@
+
 pdf:
 	R --vanilla -e 'library(roxygen2);roxygenize("./")'
 	R CMD Rd2pdf --no-preview --force ../DataScraper/
