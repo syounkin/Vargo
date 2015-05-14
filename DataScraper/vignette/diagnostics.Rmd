@@ -1,0 +1,71 @@
+---
+title: "Data Scraper"
+author: "Samuel Younkin"
+date: "Thu 14 May 2015 02:23:09 PM CDT"
+output: html_document
+---
+
+### Distribution of Average Heat, Electricity and Property Value
+
+First we load the DataScraper package and load the energy and property
+files.
+    
+```{r load, echo = TRUE, message = FALSE}
+library("DataScraper")
+energy <- read.csv(file="./data/energyTables/energyFile-2015-05-14-07-28-06.csv")
+property <- read.csv(file="./data/energyTables/Assessor_Property_Information.csv")
+data <- merge(energy, property, by.x="parcel", by.y="Parcel")
+```
+
+```{r reformat, echo = FALSE}
+data <- within(data,{
+    Current.Year.Total.Value=as.numeric(gsub("\\$","",as.character(data[,"Current.Year.Total.Value"])))
+})
+```
+#### MGE Heat Usage Histogram with Outliers Removed
+
+```{r figure2, echo = FALSE, fig.width = 5}
+outlierIndex <- which(isOutlier(data[,"therms.3"]))
+hist((data[-outlierIndex,"therms.3"]),xlab="Average therms", breaks = 40, main = "Heat Usage (Outliers Removed)")
+```
+
+#### MGE Electricity Usage Histogram with Outliers Removed
+```{r figure2b, echo = FALSE, fig.width = 5}
+outlierIndex <- which(isOutlier(data[,"kWh.3"]))
+hist((data[-outlierIndex,"kWh.3"]),xlab="Average kWh", breaks = 40, main = "Electricity Usage (Outliers Removed)")
+```
+
+#### Property Value Histogram with Outliers Removed
+```{r figure3, echo = FALSE, fig.width = 5}
+outlierIndex <- which(isOutlier(data[,"Current.Year.Total.Value"]))
+hist((data[-outlierIndex,"Current.Year.Total.Value"]),xlab="Total Property Value", breaks = 30, main = "Total Property Value (Outliers Removed)")
+```
+
+#### The function `isOutlier`
+
+Here is the function `isOutlier`.  An observation must be
+greater than one and a half IQRs from the first or third quantile to
+be classified an outlier.
+
+```{r isOutlier}
+isOutlier
+```
+
+#### Lots of outliers
+
+```{r outliers}
+nrow(data)
+sum(isOutlier(data[,"therms.3"]))
+sum(isOutlier(data[,"kWh.3"]))
+sum(isOutlier(data[,"Current.Year.Total.Value"]))
+```
+
+
+```{r houses, echo = FALSE, eval = FALSE}
+head(
+  data[
+    order(data[,"Current.Year.Total.Value"],decreasing = TRUE),
+    c("Address","Current.Year.Total.Value")
+  ]
+,10)
+```
