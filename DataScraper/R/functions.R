@@ -173,3 +173,60 @@ isOutlier <- function(vec){
     thresh <- quantile(vec,c(0.25,0.75), na.rm=TRUE)+c(-1,1)*1.5*iqr
     return((vec < thresh[1] | vec > thresh[2]) & !is.na(vec))
 }
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' retrieveEnergyTable
+#'
+#' @param house_number
+#' @param street_direction
+#' @param street_name
+#' @param street_suffix
+#' @param apartment_unit
+#' @param city
+#' @return A list with on element (or a try.error)
+#' @author Samuel Younkin
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+retrieveEnergyTable <- function(house_number, street_direction, street_name, street_suffix, apartment_unit, city){
+    full_mge_url<-paste( "http://www.mge.com/customer-service/home/average-use-cost/results.htm?",
+                        "hn=", house_number,
+                        "&sd=", street_direction,
+                        "&sn=", street_name,
+                        "&ss=", street_suffix,
+                        "&au=", apartment_unit,
+                        "&c=", city,
+                        sep=""
+                        )
+    energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent = TRUE)
+
+    return(energy_table)
+
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#' retrieveEnergyList
+#'
+#' @param Active_Address_List
+#' @return A list??
+#' @author Samuel Younkin
+#' @export
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+retrieveEnergyList <- function(Active_Address_List, mc.cores = 6){
+  with(Active_Address_List,{
+    house_number<-Address_Num
+    street_direction<-Address_StreetDirection
+    street_name<-Address_StreetName
+    street_suffix<-Address_StreetType
+    apartment_unit<-Address_UnitNum
+    city<-"Madison"
+    obj <- mcmapply(retrieveEnergyTable, house_number, street_direction, street_name, street_suffix, apartment_unit, city, mc.cores = mc.cores)
+    names(obj) <- Parcel
+    return(obj)
+  })
+}
