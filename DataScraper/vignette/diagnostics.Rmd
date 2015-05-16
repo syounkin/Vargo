@@ -5,6 +5,8 @@ date: "Thu 14 May 2015 02:23:09 PM CDT"
 output: html_document
 ---
 
+## Diagnostics for DataScraper Package
+
 ### Distribution of Average Heat, Electricity and Property Value
 
 First we load the DataScraper package and load the energy and property
@@ -35,8 +37,7 @@ outlierIndex <- which(isOutlier(data[,"kWh.3"]))
 hist((data[-outlierIndex,"kWh.3"]),xlab="Average kWh", breaks = 40, main = "Electricity Usage (Outliers Removed)")
 ```
 
-#### Property Value Histogram with Outliers Removed
-```{r figure3, echo = FALSE, fig.width = 5}
+```{r figure3, echo = FALSE, fig.width = 5, eval = FALSE}
 outlierIndex <- which(isOutlier(data[,"Current.Year.Total.Value"]))
 hist((data[-outlierIndex,"Current.Year.Total.Value"]),xlab="Total Property Value", breaks = 30, main = "Total Property Value (Outliers Removed)")
 ```
@@ -60,6 +61,11 @@ sum(isOutlier(data[,"kWh.3"]))
 sum(isOutlier(data[,"Current.Year.Total.Value"]))
 ```
 
+#### Session Info
+
+```{r sessionInfo}
+sessionInfo()
+```
 
 ```{r houses, echo = FALSE, eval = FALSE}
 head(
