@@ -44,11 +44,21 @@ date()
 Active_Address_List <- prop_info_expandedAddress
 root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
 timestamp <- gsub("\\s|:","-",Sys.time())
-energy.table.list <- list()
 
-## n <- 10
-## for( i in 1:n ){
-for( i in 1:nrow(Active_Address_List) ){
+## energy.table.list <- rep(list(NULL),nrow(Active_Address_List))
+## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
+
+j <- 1
+
+n <- 1000
+nvec <- 250+0:(n-1)
+
+energy.table.list <- rep(list(NULL),n)
+names(energy.table.list) <- as.character(Active_Address_List$Parcel)[nvec]
+
+for( i in nvec ){
+
+## for( i in 1:nrow(Active_Address_List) ){
 
   house_number<-Active_Address_List$Address_Num[i]   # set house number
   street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
@@ -68,14 +78,13 @@ for( i in 1:nrow(Active_Address_List) ){
 
   energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent = TRUE)
 
-  energy.table.list <- c(energy.table.list, energy_table)
+  energy.table.list[[j]] <- energy_table
+  j <- j + 1
 
 }
 
-## names(energy.table.list) <- as.character(Active_Address_List$Parcel)[1:n]
-names(energy.table.list) <- as.character(Active_Address_List$Parcel)
-
 saveRDS(energy.table.list, file = paste("./data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
+
 date()
 ```
 
@@ -113,6 +122,7 @@ It's easy to merge the energy usage data with the property info.
 
 ```{r merge}
 dataFull <- merge(energy.df, prop_info, by.x="parcel", by.y="Parcel")
+dataFull[1,1:20]
 ```
 
 ### Session Info
