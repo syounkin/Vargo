@@ -19,83 +19,47 @@ date()
 prop_info <- read.csv(file = "./data/energyTables/Assessor_Property_Information.csv", header=T, sep = ",", stringsAsFactors = FALSE)
 ```
 
-###  Expand Address field to be multiple fields
+####  Expand Address field to be multiple fields
 
-Here we use a function written by Tewdard to parse the property file.
+Here we use a function written by Tedward to parse the property file.
 
 ```{r expand}
-prop_info_expandedAddress <- expand_address(prop_info$Address)
-prop_info_expandedAddress <- cbind(prop_info, prop_info_expandedAddress)
+prop_info_expandedAddress <- cbind(prop_info, expand_address(prop_info$Address))
 ```
 
-###  Keep only residential, single unit, single family properties
+####  Keep only residential, single unit, single family properties
 
 ```{r non-residential}
-prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Class == "Residential")
-prop_info_expandedAddress <- subset(prop_info_expandedAddress, Dwelling.Units == 1)
-prop_info_expandedAddress <- subset(prop_info_expandedAddress, Property.Use == "Single family")
+prop_info_expandedAddress <- subset(prop_info_expandedAddress,
+  Property.Class == "Residential" & Dwelling.Units == 1 & Property.Use == "Single family"
+)
 ```
 
-### Loop through addresses and pull html tables from MGE web-page
+### Retrieve energy data
 
 ```{r mge}
-date()
-
-Active_Address_List <- prop_info_expandedAddress
-root_url <- "http://www.mge.com/customer-service/home/average-use-cost/results.htm?"
 timestamp <- gsub("\\s|:","-",Sys.time())
-
-## energy.table.list <- rep(list(NULL),nrow(Active_Address_List))
-## names(energy.table.list) <- as.character(Active_Address_List$Parcel)
-
-j <- 1
-
-n <- 1000
-nvec <- 250+0:(n-1)
-
-energy.table.list <- rep(list(NULL),n)
-names(energy.table.list) <- as.character(Active_Address_List$Parcel)[nvec]
-
-for( i in nvec ){
-
-## for( i in 1:nrow(Active_Address_List) ){
-
-  house_number<-Active_Address_List$Address_Num[i]   # set house number
-  street_direction<-Active_Address_List$Address_StreetDirection[i]   #set sd
-  street_name<-Active_Address_List$Address_StreetName[i]   #set street name
-  street_suffix<-Active_Address_List$Address_StreetType[i]   #set street suffix/Type
-  apartment_unit<-Active_Address_List$Address_UnitNum[i]   #set au
-  city<-"Madison"
-  
-  full_mge_url<-paste( root_url,
-                      "hn=",house_number,
-                      "&sd=",street_direction,
-                      "&sn=",street_name,
-                      "&ss=",street_suffix,
-                      "&au=",apartment_unit,
-                      "&c=",city,sep=""
-                      )
-
-  energy_table <- try(readHTMLTable(full_mge_url,as.data.frame=F), silent = TRUE)
-
-  energy.table.list[[j]] <- energy_table
-  j <- j + 1
-
-}
-
-saveRDS(energy.table.list, file = paste("./data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
-
 date()
 ```
 
-### Parse data object with multiple cores
+```{r mge2}
+Active_Address_List <- prop_info_expandedAddress
+energy.table.list <- retrieveEnergyList(Active_Address_List, mc.cores = 6)
+```
+
+```{r save}
+date()
+saveRDS(energy.table.list, file = paste("./data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
+```
+
+### Parse data object
 
 Here we take the raw data from the web-server and transform it to a
 more manageable form.  We do so using mclapply and take advatage of
 multiple cores.
 
 ```{r test2, error = FALSE, warning = FALSE}
-parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable,mc.cores = 8)
+parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable, mc.cores = 6)
 ```
 
 ### Failures have NULL entries (with length equal to zero)
