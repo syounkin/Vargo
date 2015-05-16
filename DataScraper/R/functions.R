@@ -64,7 +64,7 @@ expand_address<-function (AddressList){
 #' @export
 parseEnergyTable<- function (energyTable) {
 
-    if( length(energyTable) != 1 ){
+    if( class(energyTable) != "try-error" ){
 
         energyTable <- as.data.frame(energyTable)
     
@@ -111,7 +111,7 @@ parseEnergyTable<- function (energyTable) {
                 energyData <- list(therms=rep(NA,3),kWh=kWh,therms.dollar=rep(NA,3),kWh.dollar=kWh.dollar,therms.days=rep(NA,2),kWh.days=kWh.days)
 
             }else{
-                energyData <- list("")
+                energyData <- list()
             }
 
         }else{
