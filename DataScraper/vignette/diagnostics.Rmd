@@ -13,8 +13,9 @@ First we load the DataScraper package and load the energy and property
 files.
     
 ```{r load, echo = TRUE, message = FALSE}
+date()
 library("DataScraper")
-energy <- read.csv(file="./data/energyTables/energyFile-2015-05-14-07-28-06.csv")
+energy <- read.csv(file="./data/energyTables/energyFile-2015-05-16-15-30-08.csv")
 property <- read.csv(file="./data/energyTables/Assessor_Property_Information.csv")
 data <- merge(energy, property, by.x="parcel", by.y="Parcel")
 ```
