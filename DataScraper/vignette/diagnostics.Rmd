@@ -7,7 +7,7 @@ output: html_document
 
 ## Diagnostics for DataScraper Package
 
-### Distribution of Average Heat, Electricity and Property Value
+### Distribution of Average Heat and Electricity
 
 First we load the DataScraper package and load the energy and property
 files.
@@ -43,6 +43,14 @@ outlierIndex <- which(isOutlier(data[,"Current.Year.Total.Value"]))
 hist((data[-outlierIndex,"Current.Year.Total.Value"]),xlab="Total Property Value", breaks = 30, main = "Total Property Value (Outliers Removed)")
 ```
 
+### Lots of outliers
+
+```{r outliers}
+sum(isOutlier(data[,"therms.3"]))
+sum(isOutlier(data[,"kWh.3"]))
+nrow(data)
+```
+
 #### The function `isOutlier`
 
 Here is the function `isOutlier`.  An observation must be
@@ -51,15 +59,6 @@ be classified an outlier.
 
 ```{r isOutlier}
 isOutlier
-```
-
-#### Lots of outliers
-
-```{r outliers}
-nrow(data)
-sum(isOutlier(data[,"therms.3"]))
-sum(isOutlier(data[,"kWh.3"]))
-sum(isOutlier(data[,"Current.Year.Total.Value"]))
 ```
 
 #### Session Info
