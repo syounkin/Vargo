@@ -44,7 +44,7 @@ date()
 
 ```{r mge2}
 Active_Address_List <- prop_info_expandedAddress
-energy.table.list <- retrieveEnergyList(Active_Address_List, mc.cores = 6)
+energy.table.list <- retrieveEnergyList(Active_Address_List, mc.cores = 2)
 ```
 
 ```{r save}
