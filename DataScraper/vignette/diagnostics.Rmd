@@ -15,7 +15,7 @@ files.
 ```{r load, echo = TRUE, message = FALSE}
 date()
 library("DataScraper")
-energy <- read.csv(file="./data/energyTables/energyFile-2015-05-16-15-30-08.csv")
+energy <- read.csv(file="./data/energyTables/energyFile-2015-05-19-03-00-07.csv")
 property <- read.csv(file="./data/energyTables/Assessor_Property_Information.csv")
 data <- merge(energy, property, by.x="parcel", by.y="Parcel")
 ```
@@ -25,6 +25,11 @@ data <- within(data,{
     Current.Year.Total.Value=as.numeric(gsub("\\$","",as.character(data[,"Current.Year.Total.Value"])))
 })
 ```
+
+```{r table}
+table(rowSums(is.na(data[,2:17])))
+```
+
 #### MGE Heat Usage Histogram with Outliers Removed
 
 ```{r figure2, echo = FALSE, fig.width = 5}
