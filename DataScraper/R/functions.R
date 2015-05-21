@@ -69,23 +69,50 @@ parseEnergyTable<- function (energyTable) {
         energyTable <- as.data.frame(energyTable)
     
         if( all(dim(energyTable) == c(7,6)) ){
-            therms <- energyTable[1:3,2]
-            kWh <- energyTable[5:7,2]
-            therms.dollar <- energyTable[1:3,3]
-            kWh.dollar <- energyTable[5:7,3]
-            therms.days <- energyTable[1:2,4]
-            kWh.days <- energyTable[5:6,4]
+
+            if( any(names(energyTable)=="Kilowatt.Hours")  & any(energyTable[4,]=="Kilowatt Hours")){
+
+                energyData <- list()
+
+                message("Two electric meters, no heat. This property will not included in results.")
+
+            }else if( any(names(energyTable)=="Therms")  & any(energyTable[4,]=="Therms")){
+
+                energyData <- list()
+
+                message("Two heat meters, no electric. This property will not included in results.")
+
+
+            }else{
+
+                if( names(energyTable)[3] == "Therms" & energyTable[4,3] == "Kilowatt Hours"){
             
-            therms <- as.numeric(unlist(strsplit(as.character(therms), ".therms", perl = TRUE)))
-            kWh <- as.numeric(unlist(strsplit(as.character(kWh), ".kWh", perl = TRUE)))
-            therms.dollar <- as.numeric(gsub("\\$","", therms.dollar))
-            kWh.dollar <- as.numeric(gsub("\\$","", kWh.dollar))
-            therms.days <- as.numeric(gsub(" days","", therms.days))
-            kWh.days <- as.numeric(gsub(" days","", kWh.days))
+                therms <- energyTable[1:3,2]
+                kWh <- energyTable[5:7,2]
+                therms.dollar <- energyTable[1:3,3]
+                kWh.dollar <- energyTable[5:7,3]
+                therms.days <- energyTable[1:2,4]
+                kWh.days <- energyTable[5:6,4]
             
-            energyData <- list(therms=therms,kWh=kWh,therms.dollar=therms.dollar,kWh.dollar=kWh.dollar,therms.days=therms.days,kWh.days=kWh.days)
-        
-        } else if(all(dim(energyTable) == c(3,5))){ # Either only therms or only kWh
+                therms <- as.numeric(unlist(strsplit(as.character(therms), ".therms", perl = TRUE)))
+                kWh <- as.numeric(unlist(strsplit(as.character(kWh), ".kWh", perl = TRUE)))
+                therms.dollar <- as.numeric(gsub("\\$|\\,","", therms.dollar))
+                kWh.dollar <- as.numeric(gsub("\\$|\\,","", kWh.dollar))
+                therms.days <- as.numeric(gsub(" days","", therms.days))
+                kWh.days <- as.numeric(gsub(" days","", kWh.days))
+            
+                energyData <- list(therms=therms,kWh=kWh,therms.dollar=therms.dollar,kWh.dollar=kWh.dollar,therms.days=therms.days,kWh.days=kWh.days)
+
+            }else{
+
+                cat("Error number SGY-1")
+
+                energyData <- list()
+
+            }
+          }
+
+        }else if(all(dim(energyTable) == c(3,5))){ # Either only therms or only kWh
 
             
             if( all(grepl("therms",energyTable[,2])) ){ # therms
