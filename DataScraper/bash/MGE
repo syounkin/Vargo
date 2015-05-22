@@ -1,5 +1,7 @@
 #!/bin/bash
 ## Set the location of the Vargo repository
 DIR=$HOME # Mine is in my home directory
+mkdir -p $DIR/Vargo/log
+mkdir -p $DIR/Vargo/DataScraper/data
 cd $DIR/Vargo/DataScraper/
-make MGE &> $DIR/Vargo/log/make.log
+make MGE &>> $DIR/Vargo/log/make.log
