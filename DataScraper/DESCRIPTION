@@ -1,8 +1,8 @@
 Package: DataScraper
 Type: Package
 Title: DataScraper
-Version: 0.0.4
-Date: Sat 16 May 2015 02:10:07 PM CDT
+Version: 0.0.5
+Date: Fri 22 May 2015 04:11:58 PM CDT
 Author: Samuel G. Younkin, Tedward Derker
 Maintainer: Samuel G. Younkin <samuel.younkin@gmail.com>
 Description: Data scraping utility designed for MGE data in Madison, Wisconsin.

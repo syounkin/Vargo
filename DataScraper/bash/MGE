@@ -3,5 +3,6 @@
 DIR=$HOME # Mine is in my home directory
 mkdir -p $DIR/Vargo/log
 mkdir -p $DIR/Vargo/DataScraper/data
+mkdir -p $DIR/Vargo/DataScraper/html
 cd $DIR/Vargo/DataScraper/
 make MGE &>> $DIR/Vargo/log/make.log
