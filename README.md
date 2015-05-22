@@ -17,26 +17,28 @@ Details:
 The bash script runs "make" which runs R and knitr.
 
 ```
-    #!/bin/bash
-    ## Set the location of the Vargo repository
-    DIR=$HOME # Mine is in my home directory
-    cd $DIR/Vargo/DataScraper/
-    make MGE
+#!/bin/bash
+## Set the location of the Vargo repository
+DIR=$HOME # Mine is in my home directory
+cd $DIR/Vargo/DataScraper/
+make MGE &> $DIR/Vargo/log/make.log
 ```
 
 ```
-R_OPTS=--no-save --no-restore --no-init-file --no-site-file # --vanilla, but without --no-environ
 
 pdf:
-	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
+	R --vanilla -e 'library(roxygen2);roxygenize("./")'
 	R CMD Rd2pdf --no-preview --force ../DataScraper/
 
 html:
-	R ${R_OPTS} -e 'library(roxygen2);roxygenize("./")'
+	R --vanilla -e 'library(roxygen2);roxygenize("./")'
 	R CMD INSTALL --html --no-inst ../DataScraper/
 
 MGE:
-	R ${R_OPTS} -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")' # If cron fails try using the full path to R here
+	/home/sgy/bin/R --vanilla -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/MGE.Rmd","./html/MGE.html")' # If cron fails try using the full path to R here
+
+diagnostics:
+	/home/sgy/bin/R --vanilla -e 'library(knitr);opts_knit$$set(root.dir = ".");knit2html("./vignette/diagnostics.Rmd","./html/diagnostics.html")' # If cron fails try using the full path to R here
 ```
 
 The file `MGE.Rmd` contains the R script.  Make sure that DataScraper
