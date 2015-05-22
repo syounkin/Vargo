@@ -16,6 +16,7 @@ Details:
 
 The bash script runs "make" which runs R and knitr.
 
+./DataScraper/bash/MGE
 ```
 #!/bin/bash
 ## Set the location of the Vargo repository
@@ -24,6 +25,7 @@ cd $DIR/Vargo/DataScraper/
 make MGE &> $DIR/Vargo/log/make.log
 ```
 
+./DataScraper/bash/Makefile
 ```
 
 pdf:
