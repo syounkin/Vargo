@@ -4,7 +4,17 @@ Tue 12 May 2015 10:59:45 AM CDT
 Welcome to the Vargo repository! I hope you will be loving it!
 
 To run the MGE data scraper simply clone Vargo into your home
-directory and run `Vargo/DataScraper/bash/MGE`
+directory, install DataScraper, and run `Vargo/DataScraper/bash/MGE`
+
+```
+cd Vargo
+R CMD INSTALL DataScraper
+./DataScraper/bash/MGE
+```
+
+Details:
+
+The bash script runs "make" which runs R and knitr.
 
 ```
     #!/bin/bash
@@ -13,8 +23,6 @@ directory and run `Vargo/DataScraper/bash/MGE`
     cd $DIR/Vargo/DataScraper/
     make MGE
 ```
-
-This script runs the MGE portion of the following Makefile.
 
 ```
 R_OPTS=--no-save --no-restore --no-init-file --no-site-file # --vanilla, but without --no-environ
@@ -36,4 +44,3 @@ is installed with `R CMD INSTALL Vargo/DataScraper` as well as the packages
 'knitr', 'parallel' and 'XML'.
 
 We could do without parallel if we wanted to.
-
