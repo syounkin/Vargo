@@ -15,7 +15,7 @@ files.
 ```{r load, echo = TRUE, message = FALSE}
 date()
 library("DataScraper")
-energy <- read.csv(file="./data/energyTables/energyFile-2015-05-22-02-00-07.csv")
+energy <- read.csv(file="./data/energyTables/energyFile-2015-06-06-09-31-08.csv")
 property <- read.csv(file="./data/energyTables/Assessor_Property_Information.csv")
 data <- merge(energy, property, by.x="parcel", by.y="Parcel")
 ```
