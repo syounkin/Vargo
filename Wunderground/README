@@ -1,0 +1,3 @@
+wget -qO foo http://api.wunderground.com/api/59412885de19cb34/forecast/geolookup/conditions/q/pws:KWIMADIS58.xml
+
+

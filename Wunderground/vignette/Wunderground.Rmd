@@ -1,0 +1,8 @@
+wget -qO foo http://api.wunderground.com/api/59412885de19cb34/forecast/geolookup/conditions/q/pws:KWIMADIS58.xml
+
+foo <- htmlParse(file = "http://api.wunderground.com/api/59412885de19cb34/forecast/geolookup/conditions/q/pws:KWIMADIS58.xml")
+
+
+foobar <- gsub("<fahrenheit>","",sapply(getNodeSet(foo,"//fahrenheit"),function(x)capture.output(print(x))), fixed = TRUE)
+
+foobar <- as.numeric(gsub("</fahrenheit>","",foobar, fixed = TRUE))
