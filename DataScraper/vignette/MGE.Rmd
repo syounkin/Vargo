@@ -47,6 +47,7 @@ Active_Address_List <- prop_info_expandedAddress
 energy.table.list <- retrieveEnergyList(Active_Address_List, mc.cores = 2)
 ```
 
+
 ```{r save}
 date()
 saveRDS(energy.table.list, file = paste("./data/energyTables/energyTableList-", timestamp, ".rds", sep = ""))
@@ -59,7 +60,7 @@ more manageable form.  We do so using mclapply and take advatage of
 multiple cores.
 
 ```{r test2, error = FALSE, warning = FALSE}
-parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable, mc.cores = 6)
+parsedEnergyList <- mclapply(energy.table.list, parseEnergyTable, mc.cores = 2)
 ```
 
 ### Failures have NULL entries (with length equal to zero)
